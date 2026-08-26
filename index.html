@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgencyOS Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style-additions.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="ph-fill ph-code"></i>
+                    <span>AgencyOS</span>
+                </div>
+                <button class="toggle-sidebar" id="toggle-sidebar">
+                    <i class="ph ph-list"></i>
+                </button>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-view="dashboard-view">
+                    <i class="ph ph-squares-four"></i>
+                    <span>Overview</span>
+                </a>
+                <a href="#" class="nav-item" data-view="transactions-view">
+                    <i class="ph ph-receipt"></i>
+                    <span>Invoices & Expenses</span>
+                </a>
+                <a href="#" class="nav-item" data-view="projects-view">
+                    <i class="ph ph-briefcase"></i>
+                    <span>Client Projects</span>
+                </a>
+                <a href="#" class="nav-item" data-view="goals-view">
+                    <i class="ph ph-trend-up"></i>
+                    <span>Sales & Growth</span>
+                </a>
+                <a href="#" class="nav-item" data-view="settings-view">
+                    <i class="ph ph-gear"></i>
+                    <span>Agency Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="theme-toggle" id="theme-toggle">
+                    <i class="ph ph-moon"></i>
+                    <span>Dark Mode</span>
+                </button>
+                <div class="user-profile">
+                    <img src="https://i.pravatar.cc/150?img=68" alt="User Avatar">
+                    <div class="user-info">
+                        <span class="user-name">Sarah Jenkins</span>
+                        <span class="user-email">sarah@agency.com</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="mobile-menu-btn" id="mobile-menu-btn">
+                        <i class="ph ph-list"></i>
+                    </button>
+                    <h1 id="page-title">Overview</h1>
+                    
+                    <div style="margin-left: 1rem; border-left: 1px solid var(--border-color); padding-left: 1rem; display: flex; align-items: center;">
+                        <i class="ph ph-calendar-blank" style="color: var(--text-muted); margin-right: 0.5rem;"></i>
+                        <select id="global-month-filter" class="chart-select" style="padding: 0.25rem 0.5rem; font-size: 0.875rem;">
+                            <option value="all">All Time</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="btn-primary" id="open-add-modal"><i class="ph ph-plus"></i> New Record</button>
+                    <button class="icon-btn"><i class="ph ph-bell"></i></button>
+                </div>
+            </header>
+
+            <!-- Dashboard View -->
+            <div id="dashboard-view" class="view-section active">
+                <div class="dashboard-content">
+                    <!-- KPIs -->
+                    <section class="kpi-grid">
+                        <div class="card kpi-card">
+                            <div class="kpi-header">
+                                <div class="kpi-icon balance-icon">
+                                    <i class="ph ph-bank"></i>
+                                </div>
+                                <span class="trend positive"><i class="ph ph-trend-up"></i> 12.5%</span>
+                            </div>
+                            <div class="kpi-body">
+                                <h3>Total Cash Balance</h3>
+                                <h2 id="kpi-balance">LKR 0.00</h2>
+                            </div>
+                        </div>
+                        
+                        <div class="card kpi-card">
+                            <div class="kpi-header">
+                                <div class="kpi-icon income-icon">
+                                    <i class="ph ph-chart-line-up"></i>
+                                </div>
+                                <span class="trend positive"><i class="ph ph-trend-up"></i> 8.2%</span>
+                            </div>
+                            <div class="kpi-body">
+                                <h3>Monthly Recurring Rev (MRR)</h3>
+                                <h2 id="kpi-income">LKR 0.00</h2>
+                            </div>
+                        </div>
+
+                        <div class="card kpi-card">
+                            <div class="kpi-header">
+                                <div class="kpi-icon expense-icon">
+                                    <i class="ph ph-credit-card"></i>
+                                </div>
+                                <span class="trend negative"><i class="ph ph-trend-down"></i> 4.1%</span>
+                            </div>
+                            <div class="kpi-body">
+                                <h3>Monthly Expenses</h3>
+                                <h2 id="kpi-expenses">LKR 0.00</h2>
+                            </div>
+                        </div>
+
+                        <div class="card kpi-card">
+                            <div class="kpi-header">
+                                <div class="kpi-icon income-icon" style="background-color: var(--primary-light); color: var(--primary);">
+                                    <i class="ph ph-briefcase"></i>
+                                </div>
+                            </div>
+                            <div class="kpi-body">
+                                <h3>Total Expected Revenue</h3>
+                                <h2 id="kpi-total-expected">LKR 0.00</h2>
+                            </div>
+                        </div>
+
+                        <div class="card kpi-card">
+                            <div class="kpi-header">
+                                <div class="kpi-icon balance-icon" style="background-color: var(--success-light); color: var(--success);">
+                                    <i class="ph ph-hand-coins"></i>
+                                </div>
+                            </div>
+                            <div class="kpi-body">
+                                <h3>Total Received</h3>
+                                <h2 id="kpi-total-received">LKR 0.00</h2>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Analytics -->
+                    <section class="analytics-grid">
+                        <div class="card chart-card cashflow-chart">
+                            <div class="card-header">
+                                <h3>Cashflow (Income vs Expenses)</h3>
+                                <select class="chart-select">
+                                    <option>Last 6 Months</option>
+                                    <option>This Year</option>
+                                </select>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="cashflowChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="card chart-card spending-chart">
+                            <div class="card-header">
+                                <h3>Expense Breakdown</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="spendingChart"></canvas>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Recent Transactions -->
+                    <section class="transactions-section">
+                        <div class="card table-card">
+                            <div class="card-header">
+                                <h3>Recent Financial Activity</h3>
+                                <button class="btn-text" id="view-all-transactions">View All</button>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="transactions-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Client / Vendor</th>
+                                            <th>Category</th>
+                                            <th>Status</th>
+                                            <th class="text-right">Amount</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recent-transactions-body">
+                                        <!-- Populated by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Invoices & Expenses View -->
+            <div id="transactions-view" class="view-section">
+                <div class="dashboard-content">
+                    <div class="card table-card full-height">
+                        <div class="card-header">
+                            <h3>All Invoices & Expenses</h3>
+                            <div class="filters">
+                                <select id="filter-status" class="chart-select">
+                                    <option value="all">All Statuses</option>
+                                    <option value="completed">Paid / Received</option>
+                                    <option value="pending">Pending / Sent</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="transactions-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Client / Vendor</th>
+                                        <th>Category</th>
+                                        <th>Status</th>
+                                        <th class="text-right">Amount</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="all-transactions-body">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Client Projects View -->
+            <div id="projects-view" class="view-section">
+                <div class="dashboard-content">
+                    <section class="kpi-grid" style="margin-bottom: 2rem;">
+                        <div class="card kpi-card">
+                            <div class="kpi-body">
+                                <h3>Total Expected</h3>
+                                <h2 id="proj-kpi-expected" style="font-size: 1.5rem; margin-top: 0.25rem;">LKR 0.00</h2>
+                            </div>
+                        </div>
+                        <div class="card kpi-card">
+                            <div class="kpi-body">
+                                <h3>Total Received</h3>
+                                <h2 id="proj-kpi-received" style="font-size: 1.5rem; margin-top: 0.25rem;">LKR 0.00</h2>
+                            </div>
+                        </div>
+                        <div class="card kpi-card">
+                            <div class="kpi-body">
+                                <h3>Partner Split (Abdullah / Umar)</h3>
+                                <h2 id="proj-kpi-split" style="font-size: 1.5rem; margin-top: 0.25rem;">LKR 0.00 each</h2>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="projects-grid" id="projects-container">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sales & Growth View -->
+            <div id="goals-view" class="view-section">
+                <div class="dashboard-content">
+                    <div id="goals-container">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings View -->
+            <div id="settings-view" class="view-section">
+                <div class="dashboard-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Agency Profile</h3>
+                        </div>
+                        <div class="modal-body" style="padding: 0;">
+                            <form>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Agency Name</label>
+                                        <input type="text" value="Studio Web Solutions" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Contact Email</label>
+                                        <input type="email" value="hello@studioweb.com" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Business Address</label>
+                                    <input type="text" value="123 Tech Lane, Innovation City, CA 94016" disabled>
+                                </div>
+                                <div class="form-actions" style="justify-content: flex-start;">
+                                    <button type="button" class="btn-primary" disabled>Save Changes</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Add Transaction Modal -->
+    <div class="modal-overlay" id="transaction-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2>Add Record</h2>
+                <button class="close-modal" id="close-add-modal"><i class="ph ph-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="add-transaction-form">
+                    <div class="form-group">
+                        <label>Client / Vendor Name</label>
+                        <input type="text" id="trx-title" required placeholder="e.g. Acme Corp or AWS">
+                    </div>
+                    <div class="form-group">
+                        <label>Description / Invoice #</label>
+                        <input type="text" id="trx-subtitle" placeholder="e.g. INV-0042 E-commerce Build">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Amount</label>
+                            <input type="number" step="0.01" id="trx-amount" required placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label>Date</label>
+                            <input type="date" id="trx-date" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Type</label>
+                            <select id="trx-type">
+                                <option value="income">Income (Client Invoice/Retainer)</option>
+                                <option value="expense">Expense (Business Cost)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="trx-category">
+                                <option value="Web Development">Web Development</option>
+                                <option value="SMM Retainers">SMM Retainers</option>
+                                <option value="Consulting">Consulting</option>
+                                <option value="SaaS Tools">SaaS Tools</option>
+                                <option value="Ad Spend">Ad Spend</option>
+                                <option value="Contractors">Contractors / Freelancers</option>
+                                <option value="Payroll">Payroll</option>
+                                <option value="Admin">Admin / Legal</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select id="trx-status">
+                                <option value="completed">Paid / Received</option>
+                                <option value="pending">Pending / Sent</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Linked Project</label>
+                            <select id="trx-project">
+                                <option value="">-- None --</option>
+                                <!-- Populated by JS -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Account (In/Out)</label>
+                        <input type="text" id="trx-account" placeholder="e.g. Umar Savings, Cash">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancel-add-modal">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Record</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Add Project Modal -->
+    <div class="modal-overlay" id="project-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2>Add Project</h2>
+                <button class="close-modal" id="close-project-modal"><i class="ph ph-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="add-project-form">
+                    <div class="form-group">
+                        <label>Project Name</label>
+                        <input type="text" id="proj-name" required placeholder="e.g. Acme Web Build">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" id="proj-desc" required placeholder="e.g. Full-stack E-commerce...">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Total Contract Value</label>
+                            <input type="number" step="0.01" id="proj-budget" required placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label>Amount Received</label>
+                            <input type="number" step="0.01" id="proj-spent" required placeholder="0.00">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="proj-status">
+                            <option value="pending">In Progress / Design Phase</option>
+                            <option value="completed">Completed / Active</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancel-project-modal">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Project</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Goal Modal -->
+    <div class="modal-overlay" id="goal-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2>Add Revenue Target</h2>
+                <button class="close-modal" id="close-goal-modal"><i class="ph ph-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="add-goal-form">
+                    <div class="form-group">
+                        <label>Target Title</label>
+                        <input type="text" id="goal-title" required placeholder="e.g. Q3 Revenue Target">
+                    </div>
+                    <div class="form-group">
+                        <label>Target Amount</label>
+                        <input type="number" step="0.01" id="goal-target" required placeholder="100000.00">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancel-goal-modal">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Target</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Details Modal -->
+    <div class="modal-overlay" id="project-details-modal">
+        <div class="modal-card" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2 id="pd-title">Project Name</h2>
+                <button class="close-modal" id="close-project-details-modal"><i class="ph ph-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="project-stats" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem; text-align: center;">
+                    <div style="background-color: var(--bg-main); padding: 1rem; border-radius: var(--radius-md);">
+                        <p style="color: var(--text-muted); font-size: 0.875rem;">Contract Value</p>
+                        <h3 id="pd-budget" style="margin-top: 0.25rem;">LKR 0</h3>
+                    </div>
+                    <div style="background-color: var(--bg-main); padding: 1rem; border-radius: var(--radius-md);">
+                        <p style="color: var(--text-muted); font-size: 0.875rem;">Received</p>
+                        <h3 id="pd-spent" style="margin-top: 0.25rem;">LKR 0</h3>
+                    </div>
+                    <div style="background-color: var(--bg-main); padding: 1rem; border-radius: var(--radius-md);">
+                        <p style="color: var(--text-muted); font-size: 0.875rem;">Remaining</p>
+                        <h3 id="pd-remaining" style="margin-top: 0.25rem; color: var(--warning);">LKR 0</h3>
+                    </div>
+                </div>
+                <h3>Linked Transactions</h3>
+                <div class="table-responsive" style="margin-top: 1rem; max-height: 300px; overflow-y: auto;">
+                    <table class="transactions-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pd-transactions-body">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
