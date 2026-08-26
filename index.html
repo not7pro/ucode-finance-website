@@ -13,7 +13,33 @@
     <link rel="stylesheet" href="style-additions.css">
 </head>
 <body>
-    <div class="app-container">
+    <!-- Login Gate -->
+    <div id="login-overlay" class="login-overlay">
+        <div class="login-card card">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <div style="display: inline-flex; align-items: center; justify-content: center; width: 60px; height: 60px; background-color: var(--primary); color: white; border-radius: 12px; font-size: 2rem; margin-bottom: 1rem;">
+                    <i class="ph-fill ph-lock-key"></i>
+                </div>
+                <h2>Welcome Back</h2>
+                <p style="color: var(--text-muted); font-size: 0.875rem;">Please sign in to access AgencyOS.</p>
+            </div>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="login-username" class="form-control" required placeholder="Enter username">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="login-password" class="form-control" required placeholder="Enter password">
+                </div>
+                <div id="login-error" style="color: var(--danger); font-size: 0.875rem; text-align: center; margin-bottom: 1rem; display: none;">Invalid username or password.</div>
+                <button type="submit" class="btn-primary" style="width: 100%; padding: 0.75rem; font-size: 1rem;">Sign In</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="app-container" id="app-container" style="display: none;">
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">

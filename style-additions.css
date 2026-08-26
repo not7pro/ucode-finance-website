@@ -308,3 +308,28 @@
     border: 1px dashed var(--border-color);
     border-radius: var(--radius-lg);
 }
+
+/* Login Gate */
+.login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--bg-main);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.login-card {
+    background-color: var(--bg-card);
+    border-radius: var(--radius-xl);
+    width: 100%;
+    max-width: 400px;
+    padding: 2.5rem 2rem;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-color);
+}

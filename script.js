@@ -1,4 +1,35 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // === Authentication Gate ===
+    const loginOverlay = document.getElementById('login-overlay');
+    const appContainer = document.getElementById('app-container');
+    const loginForm = document.getElementById('login-form');
+    const loginError = document.getElementById('login-error');
+
+    if (sessionStorage.getItem('agency_authenticated') === 'true') {
+        if(loginOverlay) loginOverlay.style.display = 'none';
+        if(appContainer) appContainer.style.display = 'flex';
+    } else {
+        if(loginOverlay) loginOverlay.style.display = 'flex';
+        if(appContainer) appContainer.style.display = 'none';
+    }
+
+    if (loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const user = document.getElementById('login-username').value;
+            const pass = document.getElementById('login-password').value;
+            
+            if (user === 'Ucode' && pass === 'Ucode@123') {
+                sessionStorage.setItem('agency_authenticated', 'true');
+                loginOverlay.style.display = 'none';
+                appContainer.style.display = 'flex';
+                loginError.style.display = 'none';
+            } else {
+                loginError.style.display = 'block';
+            }
+        });
+    }
+
     // === Central State & LocalStorage ===
     let transactions = JSON.parse(localStorage.getItem('agency_transactions_v2')) || [];
     let projects = JSON.parse(localStorage.getItem('agency_projects')) || [];
