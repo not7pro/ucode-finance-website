@@ -81,8 +81,11 @@
                     </div>
                 </div>
                 <div class="header-right">
+                    <div style="display: flex; align-items: center; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 0.2rem; background-color: var(--bg-card);">
+                        <button id="curr-lkr" class="btn-text active" style="padding: 0.25rem 0.75rem; border-radius: 4px; font-weight: 600; font-size: 0.8rem; background-color: var(--primary); color: white;">LKR</button>
+                        <button id="curr-sar" class="btn-text" style="padding: 0.25rem 0.75rem; border-radius: 4px; font-weight: 600; font-size: 0.8rem;">SAR</button>
+                    </div>
                     <button class="btn-primary" id="open-add-modal"><i class="ph ph-plus"></i> <span>New Record</span></button>
-                    <button class="icon-btn"><i class="ph ph-bell"></i></button>
                 </div>
             </header>
 
@@ -151,6 +154,37 @@
                             <div class="kpi-body">
                                 <h3>Total Received</h3>
                                 <h2 id="kpi-total-received">LKR 0.00</h2>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Partner Equity Dashboard -->
+                    <section class="partner-equity-section" style="margin-top: 2rem;">
+                        <div class="card" style="background: linear-gradient(135deg, var(--bg-card) 0%, rgba(79, 70, 229, 0.05) 100%); border: 1px solid var(--border-color);">
+                            <div class="card-header" style="border-bottom: none; padding-bottom: 0;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <div style="background-color: var(--primary); color: white; width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                                        <i class="ph ph-users-three"></i>
+                                    </div>
+                                    <div>
+                                        <h3 style="margin-bottom: 0.2rem;">Partner Equity Split</h3>
+                                        <p style="color: var(--text-muted); font-size: 0.875rem;">Real-time 50/50 division of Total Received Income</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body" style="padding: 1.5rem;">
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+                                    <div style="background-color: var(--bg-main); padding: 1.5rem; border-radius: var(--radius-lg); border-left: 4px solid #6366f1; text-align: center; position: relative; overflow: hidden;">
+                                        <i class="ph ph-user" style="position: absolute; right: -10px; bottom: -10px; font-size: 5rem; color: var(--text-muted); opacity: 0.1;"></i>
+                                        <p style="color: var(--text-muted); font-weight: 500; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 1px;">Abdullah's Account</p>
+                                        <h2 id="partner-abdullah" style="font-size: 2rem; color: var(--text-main); margin-top: 0.5rem;">LKR 0.00</h2>
+                                    </div>
+                                    <div style="background-color: var(--bg-main); padding: 1.5rem; border-radius: var(--radius-lg); border-left: 4px solid #10b981; text-align: center; position: relative; overflow: hidden;">
+                                        <i class="ph ph-user" style="position: absolute; right: -10px; bottom: -10px; font-size: 5rem; color: var(--text-muted); opacity: 0.1;"></i>
+                                        <p style="color: var(--text-muted); font-weight: 500; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 1px;">Umar's Account</p>
+                                        <h2 id="partner-umar" style="font-size: 2rem; color: var(--text-main); margin-top: 0.5rem;">LKR 0.00</h2>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </section>

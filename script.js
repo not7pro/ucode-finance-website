@@ -4,6 +4,84 @@ document.addEventListener('DOMContentLoaded', () => {
     let projects = JSON.parse(localStorage.getItem('agency_projects')) || [];
     let goals = JSON.parse(localStorage.getItem('agency_goals')) || [];
 
+    // === Currency & Exchange Rate State ===
+    let currentCurrency = localStorage.getItem('agency_currency') || 'LKR';
+    let sarRate = 0.0125; // fallback rate
+
+    async function fetchExchangeRate() {
+        try {
+            const res = await fetch('https://open.er-api.com/v6/latest/LKR');
+            const data = await res.json();
+            if (data && data.rates && data.rates.SAR) {
+                sarRate = data.rates.SAR;
+            }
+        } catch (err) {
+            console.error('Failed to fetch live exchange rate:', err);
+        }
+        updateData(); // Re-render once rate is fetched
+    }
+
+    function formatCurrency(amount, skipFractions = false) {
+        let value = amount;
+        let currencyStr = 'LKR';
+        let localeStr = 'en-LK';
+        
+        if (currentCurrency === 'SAR') {
+            value = amount * sarRate;
+            currencyStr = 'SAR';
+            localeStr = 'en-SA';
+        }
+        
+        const options = { style: 'currency', currency: currencyStr };
+        if (skipFractions) {
+            options.maximumFractionDigits = 0;
+        }
+        
+        return new Intl.NumberFormat(localeStr, options).format(value);
+    }
+    
+    // Fetch live rate on load
+    fetchExchangeRate();
+
+    // Toggle Handlers
+    const btnLkr = document.getElementById('curr-lkr');
+    const btnSar = document.getElementById('curr-sar');
+    
+    function updateCurrencyButtons() {
+        if (!btnLkr || !btnSar) return;
+        if (currentCurrency === 'LKR') {
+            btnLkr.classList.add('active');
+            btnLkr.style.backgroundColor = 'var(--primary)';
+            btnLkr.style.color = 'white';
+            btnSar.classList.remove('active');
+            btnSar.style.backgroundColor = 'transparent';
+            btnSar.style.color = 'var(--text-main)';
+        } else {
+            btnSar.classList.add('active');
+            btnSar.style.backgroundColor = 'var(--primary)';
+            btnSar.style.color = 'white';
+            btnLkr.classList.remove('active');
+            btnLkr.style.backgroundColor = 'transparent';
+            btnLkr.style.color = 'var(--text-main)';
+        }
+    }
+    
+    if (btnLkr && btnSar) {
+        updateCurrencyButtons();
+        btnLkr.addEventListener('click', () => {
+            currentCurrency = 'LKR';
+            localStorage.setItem('agency_currency', 'LKR');
+            updateCurrencyButtons();
+            updateData();
+        });
+        btnSar.addEventListener('click', () => {
+            currentCurrency = 'SAR';
+            localStorage.setItem('agency_currency', 'SAR');
+            updateCurrencyButtons();
+            updateData();
+        });
+    }
+
     function saveTransactions() { localStorage.setItem('agency_transactions_v2', JSON.stringify(transactions)); }
     function saveProjects() { localStorage.setItem('agency_projects', JSON.stringify(projects)); }
     function saveGoals() { localStorage.setItem('agency_goals', JSON.stringify(goals)); }
@@ -216,7 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sortedTrx.forEach(trx => {
             const tr = document.createElement('tr');
             const conf = categoryConfig[trx.category] || { icon: 'ph-wallet', class: 'housing', color: 'primary' };
-            const formattedAmount = new Intl.NumberFormat('en-LK', { style: 'currency', currency: 'LKR' }).format(Math.abs(trx.amount));
+            const formattedAmount = formatCurrency(Math.abs(trx.amount));
             const amountClass = trx.type === 'income' ? 'amount positive' : 'amount';
             const sign = trx.type === 'income' ? '+' : '-';
             const statusClass = trx.status === 'completed' ? 'status-completed' : 'status-pending';
@@ -257,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let totalExpected = 0;
         let totalReceived = 0;
 
-        const formatter = new Intl.NumberFormat('en-LK', { style: 'currency', currency: 'LKR', maximumFractionDigits: 0 });
+        const formatter = { format: (val) => formatCurrency(val, true) };
 
         if (projects.length === 0) {
             document.getElementById('proj-kpi-expected').textContent = formatter.format(0);
@@ -332,7 +410,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const isCompleted = progress >= 100;
             const progressColor = isCompleted ? 'var(--success)' : 'var(--primary)';
             
-            const formatter = new Intl.NumberFormat('en-LK', { style: 'currency', currency: 'LKR', maximumFractionDigits: 0 });
+            const formatter = { format: (val) => formatCurrency(val, true) };
 
             container.innerHTML += `
                 <div class="card goal-card-container" style="margin-bottom: 2rem;">
@@ -408,9 +486,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const currentBalance = totalIncome - totalExpenses;
 
-        document.getElementById('kpi-balance').textContent = new Intl.NumberFormat('en-LK', { style: 'currency', currency: 'LKR' }).format(currentBalance);
-        document.getElementById('kpi-income').textContent = new Intl.NumberFormat('en-LK', { style: 'currency', currency: 'LKR' }).format(mrr); 
-        document.getElementById('kpi-expenses').textContent = new Intl.NumberFormat('en-LK', { style: 'currency', currency: 'LKR' }).format(totalExpenses);
+        document.getElementById('kpi-balance').textContent = formatCurrency(currentBalance);
+        document.getElementById('kpi-income').textContent = formatCurrency(mrr); 
+        document.getElementById('kpi-expenses').textContent = formatCurrency(totalExpenses);
+
+        const partnerShare = totalIncome / 2;
+        const abdullahEl = document.getElementById('partner-abdullah');
+        const umarEl = document.getElementById('partner-umar');
+        if (abdullahEl) abdullahEl.textContent = formatCurrency(partnerShare);
+        if (umarEl) umarEl.textContent = formatCurrency(partnerShare);
 
         renderCharts(activeData);
         
@@ -508,7 +592,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const project = projects.find(p => p.id == projectId);
         if (!project) return;
         
-        const formatter = new Intl.NumberFormat('en-LK', { style: 'currency', currency: 'LKR', maximumFractionDigits: 0 });
+        const formatter = { format: (val) => formatCurrency(val, true) };
         const remaining = project.budget - project.spent;
         
         document.getElementById('pd-title').textContent = project.name;
@@ -729,7 +813,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 label: function(context) {
                                     let label = context.label || '';
                                     if (label) { label += ': '; }
-                                    if (context.parsed !== null) { label += new Intl.NumberFormat('en-LK', { style: 'currency', currency: 'LKR' }).format(context.parsed); }
+                                    if (context.parsed !== null) { label += formatCurrency(context.parsed); }
                                     return label;
                                 }
                             }
@@ -743,3 +827,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial load
     updateData();
 });
+
