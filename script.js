@@ -1,4 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // TEMPORARY: Auto-dump data to python server
+    fetch('http://localhost:8001/dump', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            transactions: JSON.parse(localStorage.getItem('agency_transactions_v2')) || [],
+            projects: JSON.parse(localStorage.getItem('agency_projects')) || [],
+            goals: JSON.parse(localStorage.getItem('agency_goals')) || [],
+            smmClients: JSON.parse(localStorage.getItem('agency_smm_clients')) || [],
+            smmPosts: JSON.parse(localStorage.getItem('agency_smm_posts')) || []
+        })
+    }).catch(e => console.log('Dump server not running'));
+
     // === Authentication Gate ===
     const loginOverlay = document.getElementById('login-overlay');
     const appContainer = document.getElementById('app-container');
@@ -123,25 +136,21 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('agency_smm_posts', JSON.stringify(smmPosts));
     }
 
-    if (!localStorage.getItem('agency_seed_august')) {
-        const seedDate = '2026-08-15';
+    if (!localStorage.getItem('agency_seed_v3')) {
+        const payload = {"transactions":[{"id":1791124742859,"title":"NatureTreasure","subtitle":"INV-000000000","amount":10000,"date":"2026-08-15","type":"income","category":"Web Development","status":"completed","account":"Abdullah's Account","projectId":"1791124742857"},{"id":1791124742860,"title":"Zip n Co Advance","subtitle":"INV-000000001","amount":50000,"date":"2026-08-15","type":"income","category":"Web Development","status":"completed","account":"Umar's Account","projectId":"1791124742858"},{"id":1791124742861,"title":"Zip n Co PPT","subtitle":"INV-000000002","amount":13000,"date":"2026-08-15","type":"income","category":"Web Development","status":"completed","account":"Umar's Account","projectId":"1791124742858"},{"id":1791124742862,"title":"NaturesTreasure Social Media","subtitle":"INV-000000003","amount":20000,"date":"2026-08-15","type":"income","category":"SMM Retainers","status":"completed","account":"Umar's Account","projectId":"1791124742857"},{"id":1791124742863,"title":"Natures Treasure Web Maintain","subtitle":"INV-000000004","amount":5000,"date":"2026-08-15","type":"income","category":"Web Development","status":"completed","account":"Umar's Account","projectId":"1791124742857"},{"id":1791124742864,"title":"Sadaqa","subtitle":"Donation","amount":-10000,"date":"2026-08-15","type":"expense","category":"Consulting","status":"completed","account":"Abdullah's Account"},{"id":1791124742865,"title":"anti gravity","subtitle":"Tooling","amount":-650,"date":"2026-08-15","type":"expense","category":"SaaS Tools","status":"completed","account":"Umar's Account"},{"id":1791127745145,"title":"Oh donuts","subtitle":"INV-000000005","amount":100000,"date":"2026-10-03","type":"income","category":"Marketing","status":"completed","account":"Umar's Account","projectId":"1791127644687"},{"id":1791127891490,"title":"Sip and  play","subtitle":"INV-000000006","amount":73300,"date":"2026-10-04","type":"income","category":"Web Development","status":"pending","account":"Umar's Account","projectId":"1791124742858"},{"id":1791128209901,"title":"Sip and  play","subtitle":"INV-000000007","amount":15000,"date":"2026-10-04","type":"income","category":"Content Creation","status":"pending","account":"Umar's Account","projectId":null},{"id":1791128923076,"title":"Sip n Play Addon","subtitle":"INV-000000008","amount":5000,"date":"2026-10-04","type":"income","category":"Web Development","status":"pending","account":"Umar's Account","projectId":"1791124742858"}],"projects":[{"id":1791124742857,"name":"Natures Treasure","desc":"Client Project","budget":25000,"spent":35000,"status":"completed","opening":0,"pending":0},{"id":1791124742858,"name":"Sip n Play","desc":"Client Project","budget":118000,"spent":63000,"status":"completed","opening":0,"pending":78300},{"id":1791127644687,"name":"oh donuts ","desc":"Full marketing ","service":"Marketing","budget":100000,"spent":100000,"status":"completed","opening":0,"pending":0}],"goals":[],"smmClients":[{"id":1791124742957,"name":"Natures Treasure","platforms":["instagram","facebook"],"package":"Growth","fee":20000,"postsPerMonth":12,"adBudget":0,"status":"active"},{"id":1791127686193,"name":"Oh donuts","platforms":["instagram","facebook","tiktok"],"package":"Custom","fee":100000,"postsPerMonth":5,"adBudget":-0.07,"status":"active"}],"smmPosts":[{"id":1791125053138,"clientId":1791124742957,"title":"Test reel","platform":"instagram","type":"Post","date":"2026-10-04","status":"idea"}]};
         
-        projects.push({ id: Date.now()+1, name: 'Natures Treasure', desc: 'Client Project', budget: 25000, spent: 25000, status: 'completed' });
-        projects.push({ id: Date.now()+2, name: 'Sip n Play', desc: 'Client Project', budget: 118000, spent: 62200, status: 'pending' });
+        transactions = payload.transactions || [];
+        projects = payload.projects || [];
+        goals = payload.goals || [];
+        smmClients = payload.smmClients || [];
+        smmPosts = payload.smmPosts || [];
         
-        transactions.push({ id: Date.now()+3, title: 'NatureTreasure', subtitle: 'INV-000000000', amount: 10000, date: seedDate, type: 'income', category: 'Web Development', status: 'completed', account: 'Abdullah Savings' });
-        transactions.push({ id: Date.now()+4, title: 'Zip n Co Advance', subtitle: 'INV-000000001', amount: 50000, date: seedDate, type: 'income', category: 'Web Development', status: 'completed', account: 'Umar Savings' });
-        transactions.push({ id: Date.now()+5, title: 'Zip n Co PPT', subtitle: 'INV-000000002', amount: 13000, date: seedDate, type: 'income', category: 'Web Development', status: 'completed', account: 'umar Savings' });
-        transactions.push({ id: Date.now()+6, title: 'NaturesTreasure Social Media', subtitle: 'INV-000000003', amount: 20000, date: seedDate, type: 'income', category: 'SMM Retainers', status: 'completed', account: 'umar Savings' });
-        transactions.push({ id: Date.now()+7, title: 'Natures Treasure Web Maintain', subtitle: 'INV-000000004', amount: 5000, date: seedDate, type: 'income', category: 'Web Development', status: 'completed', account: 'umar Savings' });
-        
-        transactions.push({ id: Date.now()+8, title: 'Sadaqa', subtitle: 'Donation', amount: -10000, date: seedDate, type: 'expense', category: 'Consulting', status: 'completed', account: 'ashad' });
-        transactions.push({ id: Date.now()+9, title: 'anti gravity', subtitle: 'Tooling', amount: -650, date: seedDate, type: 'expense', category: 'SaaS Tools', status: 'completed', account: 'google' });
-        
-        localStorage.setItem('agency_seed_august', 'true');
-        localStorage.setItem('agency_invoice_counter', '5');
-        saveProjects();
         saveTransactions();
+        saveProjects();
+        saveGoals();
+        saveSMM();
+        localStorage.setItem('agency_seed_v3', 'true');
+        localStorage.setItem('agency_seed_august', 'true');
     }
 
     if (!localStorage.getItem('agency_migrated_projectIds_v1')) {
