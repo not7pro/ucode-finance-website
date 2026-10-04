@@ -1149,6 +1149,45 @@ document.addEventListener('DOMContentLoaded', () => {
         filterSelect.addEventListener('change', () => { updateData(); });
     }
 
+    // === Export & Import Data ===
+    document.getElementById('export-data-btn').addEventListener('click', () => {
+        const data = {
+            transactions: JSON.parse(localStorage.getItem('agency_transactions_v2')) || [],
+            projects: JSON.parse(localStorage.getItem('agency_projects')) || [],
+            goals: JSON.parse(localStorage.getItem('agency_goals')) || [],
+            smmClients: JSON.parse(localStorage.getItem('agency_smm_clients')) || [],
+            smmPosts: JSON.parse(localStorage.getItem('agency_smm_posts')) || []
+        };
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `ucode_finance_backup_${new Date().toISOString().slice(0, 10)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+    });
+
+    document.getElementById('import-file-input').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            try {
+                const data = JSON.parse(event.target.result);
+                if (data.transactions) localStorage.setItem('agency_transactions_v2', JSON.stringify(data.transactions));
+                if (data.projects) localStorage.setItem('agency_projects', JSON.stringify(data.projects));
+                if (data.goals) localStorage.setItem('agency_goals', JSON.stringify(data.goals));
+                if (data.smmClients) localStorage.setItem('agency_smm_clients', JSON.stringify(data.smmClients));
+                if (data.smmPosts) localStorage.setItem('agency_smm_posts', JSON.stringify(data.smmPosts));
+                alert('Data imported successfully!');
+                window.location.reload();
+            } catch (err) {
+                alert('Invalid backup file. Could not import data.');
+            }
+        };
+        reader.readAsText(file);
+    });
+
     // === Charts Initialization ===
     let cashflowChartInstance = null;
     let spendingChartInstance = null;
