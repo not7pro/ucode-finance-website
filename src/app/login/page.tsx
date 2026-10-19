@@ -24,17 +24,22 @@ export default function LoginPage() {
     setTimeout(() => {
       setIsLoading(false);
       const lower = email.toLowerCase();
+      let role = "client";
+      let dest = "/portal";
       if (lower.includes("founder") || lower.includes("abdullah") || lower.includes("umar")) {
-        router.push("/founder");
+        role = "founder";
+        dest = "/founder";
       } else if (lower.includes("employee") || lower.includes("imran") || lower.includes("sarah")) {
-        router.push("/employee/today");
-      } else {
-        router.push("/portal");
+        role = "employee";
+        dest = "/employee/today";
       }
-    }, 600);
+      document.cookie = `ucode_demo_role=${role}; path=/; max-age=86400; SameSite=Lax`;
+      router.push(dest);
+    }, 400);
   };
 
   const handleDemoLogin = (role: "founder" | "employee" | "client") => {
+    document.cookie = `ucode_demo_role=${role}; path=/; max-age=86400; SameSite=Lax`;
     if (role === "founder") {
       setEmail("abdullah@universalcode.site");
       setPassword("founder123");
