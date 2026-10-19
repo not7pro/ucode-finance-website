@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Ucode Agency Light Theme Tokens */
+    --background: 150 14% 97%;
+    --foreground: 158 58% 7%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 158 58% 7%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 158 58% 7%;
+
+    --primary: 156 78% 21%; /* Deep forest #0b5a3a */
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 156 82% 16%;
+
+    --secondary: 150 12% 92%;
+    --secondary-foreground: 158 58% 12%;
+
+    --muted: 150 12% 92%;
+    --muted-foreground: 155 16% 40%;
+
+    --accent: 156 73% 54%; /* Mint #34e0a1 */
+    --accent-foreground: 158 58% 7%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 150 14% 88%;
+    --input: 150 14% 88%;
+    --ring: 156 78% 21%;
+
+    --radius: 0.625rem;
+  }
+
+  [data-theme="dark"], .dark {
+    /* Ucode Agency Billion-Dollar Obsidian Forest Theme */
+    --background: 156 60% 4%; /* #021a10 */
+    --foreground: 150 30% 95%; /* #ecf6f1 */
+
+    --card: 155 35% 8%; /* #0c2118 */
+    --card-foreground: 150 30% 95%;
+
+    --popover: 155 35% 8%;
+    --popover-foreground: 150 30% 95%;
+
+    --primary: 156 73% 54%; /* Vibrant Mint #34e0a1 */
+    --primary-foreground: 156 60% 4%;
+    --primary-hover: 156 78% 46%;
+
+    --secondary: 155 30% 13%;
+    --secondary-foreground: 150 30% 95%;
+
+    --muted: 155 30% 13%;
+    --muted-foreground: 155 16% 62%; /* #8fb0a1 */
+
+    --accent: 156 73% 54%;
+    --accent-foreground: 156 60% 4%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 155 42% 15%; /* #17382a */
+    --input: 155 42% 15%;
+    --ring: 156 73% 54%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+  
+  /* Strict Financial Tabular Numbers */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
